@@ -30,7 +30,7 @@ WindowsアプリケーションのAPIを使用するため、以下のライブ�
 宛先(To,Cc,Bcc)の設定をテキストファイルに記載してください。
 設定例は`sample.conf`にあります。
 
-以下のコマンド入力でメール送信画面を表示またはメール送信します。
+以下のコマンド入力でメール送信画面を表示(or メール送信)します。
 ```command:sample
 python report_working_hours.py sample.conf 資料.xls
 ```
