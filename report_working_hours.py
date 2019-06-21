@@ -28,18 +28,18 @@ def sendmail():
     with open(confpath) as f:
         address = [s.strip() for s in f.readlines()]
     mymail.BodyFormat = 1               #テキストタイプ
-    if len(address) == 0:
+    if 0 <= len(address) <= 1:
         print("宛先が未設定です。いずれかのキーを押すと終了します")
         exit_proc()
-    elif len(address) == 1:
-        mymail.To = address[0]          # To
     elif len(address) == 2:
-        mymail.To = address[0]          # To
-        mymail.cc = address[1]          # Cc
+        mymail.To = address[1]          # To
     elif len(address) == 3:
-        mymail.To = address[0]          # To
-        mymail.cc = address[1]          # Cc
-        mymail.Bcc = address[2]         # Bcc
+        mymail.To = address[1]          # To
+        mymail.cc = address[2]          # Cc
+    elif len(address) == 4:
+        mymail.To = address[1]          # To
+        mymail.cc = address[2]          # Cc
+        mymail.Bcc = address[3]         # Bcc
 
     mymail.Subject = "【勤怠】 " + str(vdatefc) + " 分の送付"
     mymail.Body = "〇〇さん" + "\n\n" + "お疲れ様です。□□です。" + "\n\n" + str(vdatefc) + "(" + yobi + ")" + "の勤怠を記載しましたので、\n" + "送付致します。" + "\n\n" + "以上、よろしくお願い致します。"
@@ -49,8 +49,10 @@ def sendmail():
         mymail.Attachments.Add (filepath)
 
     # メール送信
-    mymail.Display(True)    # 作成画面を表示
-    #mymail.Send()          # 画面非表示で送信
+    if address[1] == 0:
+        mymail.Send()          # 画面非表示で送信
+    else:
+        mymail.Display(True)    # 作成画面を表示
 
 if len(args) == 1:
     print("設定ファイル、添付ファイルが指定されていません。いずれかのキーを押すと終了します")
