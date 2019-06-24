@@ -1,20 +1,29 @@
-import win32com.client
-import datetime
+"""
+レポートをメール送信するプログラム
+"""
 import sys
 import os
+import datetime
+import win32com.client
 import readchar
 
-args = sys.argv
-path = os.getcwd()
+ARGS = sys.argv
+PATH = os.getcwd()
 
 
 def exit_proc():
-    key = readchar.readkey()
-    if not key:
+    """
+    処理終了
+    """
+    ikey = readchar.readkey()
+    if not ikey:
         sys.exit()
 
 
 def sendmail():
+    """
+    メール送信
+    """
     # Outlookのオブジェクト設定
     outlook = win32com.client.Dispatch("Outlook.Application")
     mymail = outlook.CreateItem(0)
@@ -26,8 +35,8 @@ def sendmail():
     yobi = dayoftheweek[vdate.weekday()]
 
     # メールアドレスの設定
-    with open(confpath) as f:
-        address = [s.strip() for s in f.readlines()]
+    with open(CONFPATH) as ofpath:
+        address = [s.strip() for s in ofpath.readlines()]
     mymail.BodyFormat = 1               # テキストタイプ
     if 0 <= len(address) <= 1:
         print("宛先が未設定です。いずれかのキーを押すと終了します")
@@ -49,8 +58,9 @@ def sendmail():
     mymail.Body = valuebody1 + valuebody2 + valuebody3
 
     # ファイルが添付されている場合
-    if len(filepath) > 0:
-        mymail.Attachments.Add(filepath)
+    valuelen = len(FILEPATH)
+    if valuelen > 0:
+        mymail.Attachments.Add(FILEPATH)
 
     # メール送信
     if address[1] == 0:
@@ -59,23 +69,23 @@ def sendmail():
         mymail.Display(True)    # 作成画面を表示
 
 
-if len(args) == 1:
+if len(ARGS) == 1:
     print("設定ファイル、添付ファイルが指定されていません。いずれかのキーを押すと終了します")
     exit_proc()
-elif len(args) == 2:
+elif len(ARGS) == 2:
     print("添付ファイル名が指定されていません。")
     print("そのまま送信する場合は y、終了する場合は y 以外を入力してください")
-    key = readchar.readkey()
-    if not key == 'y':
+    KEY = readchar.readkey()
+    if not KEY == 'y':
         sys.exit()
     else:
-        confname = sys.argv[1]
-        confpath = path + '//' + confname
-        filepath = ''
+        CONFNAME = sys.argv[1]
+        CONFPATH = PATH + '//' + CONFNAME
+        FILEPATH = ''
         sendmail()
-elif len(args) == 3:
-    confname = sys.argv[1]
-    confpath = path + '//' + confname
-    filename = sys.argv[2]
-    filepath = path + '//' + filename
+elif len(ARGS) == 3:
+    CONFNAME = sys.argv[1]
+    CONFPATH = PATH + '//' + CONFNAME
+    FILENAME = sys.argv[2]
+    FILEPATH = PATH + '//' + FILENAME
     sendmail()
