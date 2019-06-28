@@ -63,7 +63,8 @@ def sendmail():
         mymail.Attachments.Add(FILEPATH)
 
     # メール送信
-    if address[1] == 0:
+    mailtypeflg = int(address[0])
+    if mailtypeflg == 0:
         mymail.Send()          # 画面非表示で送信
     else:
         mymail.Display(True)    # 作成画面を表示
